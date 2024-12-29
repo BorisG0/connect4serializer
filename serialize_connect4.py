@@ -9,19 +9,39 @@ def play_tile(board, column, player):
     for row in range(5, -1, -1):
         if board[row][column] == 0:
             board[row][column] = player
-            return True
+            return True, row
     return False
+
+def check_win(board, player, row, column):
+    # check vertical
+    if row <= 2:
+        if board[row+1][column] == player and board[row+2][column] == player and board[row+3][column] == player:
+            return True
+        
+    # check horizontal
+    
+    
+    return False
+    
 
 def start_game():
 
     def play_turn(player):
         print("Player", player ,"what column? (1-7)")
         column = int(input()) - 1
-        if not play_tile(board, column, player):
+
+        valid, placed_row = play_tile(board, column, player)
+        print(placed_row)
+        if not valid:
             print("Invalid move")
             play_turn(player)
             return
+        
         print_board(board)
+
+        if check_win(board, player, placed_row, column):
+            print("Player", player, "wins!")
+            exit()
 
     board = [[0 for _ in range(7)] for _ in range(6)]
     print_board(board)
