@@ -116,7 +116,8 @@ def start_game():
 
             serialized_game = int(inp[3:])
             board, turn = deserialize_game(serialized_game)
-            serialized_game = serialized_game - serialize_turn(1, turn)
+            print("stuff", (serialized_game // (7**turn)))
+            serialized_game = serialized_game - serialize_turn(1, turn) * (serialized_game // (7**turn))
             print("serialized:", serialized_game)
             return
 
