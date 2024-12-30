@@ -92,7 +92,7 @@ def deserialize_game(serialized_game):
         print("Player", last_player,"wins!")
         exit()
 
-    print("processed",serialized_game)
+    # print("processed",serialized_game)
     return board, turn
 
 def start_game():
@@ -111,14 +111,13 @@ def start_game():
 
         inp = input()
         if len(inp) > 3 and inp[:3] == "des":
-            print("Deserializing")
-            print(int(inp[3:]))
-
             serialized_game = int(inp[3:])
+            print("Deserializing", serialized_game)
+            
             board, turn = deserialize_game(serialized_game)
-            print("stuff", (serialized_game // (7**turn)))
+            # print("stuff", (serialized_game // (7**turn)))
             serialized_game = serialized_game - serialize_turn(1, turn) * (serialized_game // (7**turn))
-            print("serialized:", serialized_game)
+            # print("serialized:", serialized_game)
             return
 
 
