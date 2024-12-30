@@ -1,5 +1,3 @@
-
-
 def print_board(board):
     for row in board:
         print(row)
@@ -19,8 +17,56 @@ def check_win(board, player, row, column):
             return True
         
     # check horizontal
+    search = 1
+    count = 1
+    # search left
+    while column - search >= 0 and board[row][column - search] == player:
+        count += 1
+        search += 1
+
+    # search right
+    search = 1
+    while column + search < 7 and board[row][column + search] == player:
+        count += 1
+        search += 1
     
-    
+    if count >= 4:
+        return True
+
+
+    # check diagonal
+    search = 1
+    count = 1
+    # search left up
+    while row - search >= 0 and column - search >= 0 and board[row - search][column - search] == player:
+        count += 1
+        search += 1
+
+    # search right down
+    search = 1
+    while row + search < 6 and column + search < 7 and board[row + search][column + search] == player:
+        count += 1
+        search += 1
+
+    if count >= 4:
+        return True
+
+    # search left down
+    search = 1
+    count = 1
+    while row + search < 6 and column - search >= 0 and board[row + search][column - search] == player:
+        count += 1
+        search += 1
+
+    # search right up
+    search = 1
+    while row - search >= 0 and column + search < 7 and board[row - search][column + search] == player:
+        count += 1
+        search += 1
+
+    if count >= 4:
+        return True
+
     return False
     
 
