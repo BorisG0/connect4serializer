@@ -70,7 +70,12 @@ def check_win(board, player, row, column):
     return False
     
 
+def serialize_turn(column, turn):
+    return 7**turn * column
+
 def start_game():
+    turn = 0
+    serialized_game = 0
 
     def play_turn(player):
         print("Player", player ,"what column? (1-7)")
@@ -84,6 +89,12 @@ def start_game():
             return
         
         print_board(board)
+        nonlocal turn
+        nonlocal serialized_game
+
+        turn += 1
+        serialized_game += serialize_turn(column, turn)
+        print("serialized:", serialized_game)
 
         if check_win(board, player, placed_row, column):
             print("Player", player, "wins!")
@@ -94,7 +105,6 @@ def start_game():
     player = 1
     
     
-
     while True:
         play_turn(player)
         player = 3 - player
