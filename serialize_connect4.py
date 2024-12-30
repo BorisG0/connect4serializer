@@ -73,41 +73,76 @@ def check_win(board, player, row, column):
 def serialize_turn(column, turn):
     return 7**turn * column
 
+def deserialize_game(serialized_game):
+    board = [[0 for _ in range(7)] for _ in range(6)]
+    turn = 0
+
+    while serialized_game > 7:
+        column = serialized_game % 7
+        serialized_game = serialized_game // 7
+        print("turn", turn, "column", column)
+        _, row = play_tile(board, column, turn%2 + 1)
+        turn += 1
+
+    print_board(board)
+    print("turn:", turn)
+
+    last_player = (turn - 1) % 2 + 1
+    if turn > 3 and check_win(board, last_player, row, column):
+        print("Player", last_player,"wins!")
+        exit()
+
+    return board, turn
+
 def start_game():
+    board = [[0 for _ in range(7)] for _ in range(6)]
     turn = 0
     serialized_game = 0
 
-    def play_turn(player):
+    def play_turn():
+        nonlocal turn
+        nonlocal serialized_game
+        nonlocal board
+        nonlocal serialized_game
+
+        player = turn % 2 + 1
+
         print("Player", player ,"what column? (1-7)")
-        column = int(input()) - 1
+
+        inp = input()
+        if len(inp) > 3 and inp[:3] == "des":
+            print("Deserializing")
+            print(int(inp[3:]))
+
+            serialized_game = int(inp[3:])
+            board, turn = deserialize_game(serialized_game)
+            serialized_game -= serialize_turn(1, turn + 1)
+            return
+
+
+        column = int(inp) - 1
 
         valid, placed_row = play_tile(board, column, player)
-        print(placed_row)
         if not valid:
             print("Invalid move")
             play_turn(player)
             return
         
         print_board(board)
-        nonlocal turn
-        nonlocal serialized_game
-
-        turn += 1
+        
         serialized_game += serialize_turn(column, turn)
-        print("serialized:", serialized_game)
+        turn += 1
+        print("serialized:", (serialized_game + serialize_turn(1,turn +1))) # add 1 to indicate turn
 
         if check_win(board, player, placed_row, column):
             print("Player", player, "wins!")
             exit()
 
-    board = [[0 for _ in range(7)] for _ in range(6)]
-    print_board(board)
-    player = 1
     
+    print_board(board)
     
     while True:
-        play_turn(player)
-        player = 3 - player
+        play_turn()
 
 
 
