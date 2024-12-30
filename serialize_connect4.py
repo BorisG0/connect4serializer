@@ -77,7 +77,7 @@ def deserialize_game(serialized_game):
     board = [[0 for _ in range(7)] for _ in range(6)]
     turn = 0
 
-    while serialized_game > 7:
+    while serialized_game > 6:
         column = serialized_game % 7
         serialized_game = serialized_game // 7
         print("turn", turn, "column", column)
@@ -92,6 +92,7 @@ def deserialize_game(serialized_game):
         print("Player", last_player,"wins!")
         exit()
 
+    print("processed",serialized_game)
     return board, turn
 
 def start_game():
@@ -101,7 +102,6 @@ def start_game():
 
     def play_turn():
         nonlocal turn
-        nonlocal serialized_game
         nonlocal board
         nonlocal serialized_game
 
@@ -116,11 +116,16 @@ def start_game():
 
             serialized_game = int(inp[3:])
             board, turn = deserialize_game(serialized_game)
-            serialized_game -= serialize_turn(1, turn + 1)
+            serialized_game = serialized_game - serialize_turn(1, turn)
+            print("serialized:", serialized_game)
             return
 
 
         column = int(inp) - 1
+        if column < 0 or column > 6:
+            print("Invalid move")
+            play_turn(player)
+            return
 
         valid, placed_row = play_tile(board, column, player)
         if not valid:
@@ -131,8 +136,8 @@ def start_game():
         print_board(board)
         
         serialized_game += serialize_turn(column, turn)
-        turn += 1
         print("serialized:", (serialized_game + serialize_turn(1,turn +1))) # add 1 to indicate turn
+        turn += 1
 
         if check_win(board, player, placed_row, column):
             print("Player", player, "wins!")
